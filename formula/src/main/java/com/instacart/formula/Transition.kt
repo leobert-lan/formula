@@ -23,15 +23,18 @@ sealed class Transition<out State> {
      * Stateful transition.
      *
      * @param state New state
-     * @param action Optional effects such as parent callbacks, logging, db writes,
-     * network requests, etc.
+     * @param action An optional deferred action that will be executed by the Formula runtime. Within
+     * this action block, you can trigger listeners, log analytics, trigger database writes,
+     * trigger fire and forget network requests, etc.
      */
     data class Stateful<State>(val state: State, override val action: Action? = null) : Transition<State>()
 
     /**
      * Only action is emitted as part of this transition.
      *
-     * @param action An executable action that can invoke parent callbacks, logging, db writes, network requests, etc.
+     * @param action A deferred action that will be executed by the Formula runtime. Within
+     * this action block, you can trigger listeners, log analytics, trigger database writes,
+     * trigger fire and forget network requests, etc.
      */
     data class OnlyAction(override val action: Action) : Transition<Nothing>()
 
