@@ -25,7 +25,7 @@ class FormulaRuntime<Input : Any, Output : Any>(
     private var lastOutput: Output? = null
     private var executionRequested: Boolean = false
 
-    private val effectQueue = LinkedList<Effects>()
+    private val actionQueue = LinkedList<Action>()
 
     private var input: Input? = null
     private var key: Any? = null
@@ -44,8 +44,8 @@ class FormulaRuntime<Input : Any, Output : Any>(
             val transitionListener = TransitionListener { transition, isValid ->
                 threadChecker.check("Only thread that created it can trigger transitions.")
 
-                transition.effects?.let {
-                    effectQueue.addLast(it)
+                transition.action?.let {
+                    actionQueue.addLast(it)
                 }
 
                 run(shouldEvaluate = !isValid)
@@ -136,8 +136,8 @@ class FormulaRuntime<Input : Any, Output : Any>(
                 }
             }
 
-            // We execute pending side-effects even after termination
-            if (executeEffects(transitionId)) {
+            // We execute pending actions even after termination
+            if (executeActions(transitionId)) {
                 continue
             }
         }
@@ -145,11 +145,11 @@ class FormulaRuntime<Input : Any, Output : Any>(
     }
 
     /**
-     * Executes effects from the [effectQueue].
+     * Executes pending actions from the [actionQueue].
      */
-    private fun executeEffects(transitionId: TransitionId): Boolean {
-        while (effectQueue.isNotEmpty()) {
-            val effects = effectQueue.pollFirst()
+    private fun executeActions(transitionId: TransitionId): Boolean {
+        while (actionQueue.isNotEmpty()) {
+            val effects = actionQueue.pollFirst()
             if (effects != null) {
                 effects()
 

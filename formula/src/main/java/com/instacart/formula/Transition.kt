@@ -1,7 +1,7 @@
 package com.instacart.formula
 
 /**
- * Defines an intent to transition by emitting a new [State] and optional [Effects].
+ * Defines an intent to transition by emitting a new [State] and optional [Action].
  */
 sealed class Transition<out State> {
     companion object {
@@ -23,23 +23,23 @@ sealed class Transition<out State> {
      * Stateful transition.
      *
      * @param state New state
-     * @param effects Optional effects such as parent callbacks, logging, db writes,
+     * @param action Optional effects such as parent callbacks, logging, db writes,
      * network requests, etc.
      */
-    data class Stateful<State>(val state: State, override val effects: Effects? = null) : Transition<State>()
+    data class Stateful<State>(val state: State, override val action: Action? = null) : Transition<State>()
 
     /**
-     * Only effects are emitted as part of this transition
+     * Only action is emitted as part of this transition.
      *
-     * @param effects Effects such as parent callbacks, logging, db writes, network requests, etc.
+     * @param action An executable action that can invoke parent callbacks, logging, db writes, network requests, etc.
      */
-    data class OnlyEffects(override val effects: Effects) : Transition<Nothing>()
+    data class OnlyAction(override val action: Action) : Transition<Nothing>()
 
     /**
      * Nothing happens in this transition.
      */
     object None : Transition<Nothing>() {
-        override val effects: Effects? = null
+        override val action: Action? = null
     }
 
 
@@ -56,25 +56,25 @@ sealed class Transition<out State> {
         }
 
         /**
-         * Creates a transition to a new [State] and executes [invokeEffects] callback
+         * Creates a transition to a new [State] and executes [invokeAction] callback
          * after the state change.
          */
         fun <State> transition(
             state: State,
-            invokeEffects: (() -> Unit)? = null
+            invokeAction: (() -> Unit)? = null
         ): Stateful<State> {
-            return Stateful(state, invokeEffects)
+            return Stateful(state, invokeAction)
         }
 
         /**
-         * Creates a transition that only executes [invokeEffects].
+         * Creates a transition that only executes [invokeAction].
          */
         fun transition(
-            invokeEffects: () -> Unit
-        ): OnlyEffects {
-            return OnlyEffects(invokeEffects)
+            invokeAction: () -> Unit
+        ): OnlyAction {
+            return OnlyAction(invokeAction)
         }
     }
 
-    abstract val effects: Effects?
+    abstract val action: Action?
 }

@@ -1,6 +1,6 @@
 package com.instacart.formula
 
 /**
- * Executable effects.
+ * Executable action. (TODO: elaborate more)
  */
-typealias Effects = () -> Unit
+typealias Action = () -> Unit
