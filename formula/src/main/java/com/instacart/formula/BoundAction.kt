@@ -1,17 +1,19 @@
 package com.instacart.formula
 
-class Update<Message>(
+/**
+ * An action combined with event listener.
+ */
+class BoundAction<Message>(
     val key: Any,
     val stream: Stream<Message>,
-    initial: (Message) -> Unit
+    internal var listener: (Message) -> Unit
 ) {
 
-    internal var handler: (Message) -> Unit = initial
     internal var cancelable: Cancelable? = null
 
     internal fun start() {
         cancelable = stream.start() { message ->
-            handler.invoke(message)
+            listener.invoke(message)
         }
     }
 
@@ -24,7 +26,7 @@ class Update<Message>(
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as Update<*>
+        other as BoundAction<*>
 
         if (key != other.key) return false
 

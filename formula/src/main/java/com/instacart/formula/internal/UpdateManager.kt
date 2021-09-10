@@ -1,29 +1,29 @@
 package com.instacart.formula.internal
 
-import com.instacart.formula.Update
+import com.instacart.formula.BoundAction
 
 /**
- * Handles [Update] changes.
+ * Handles [BoundAction] changes.
  */
 internal class UpdateManager {
     companion object {
         val NO_OP: (Any?) -> Unit = {}
     }
 
-    private var running: LinkedHashSet<Update<*>>? = null
+    private var running: LinkedHashSet<BoundAction<*>>? = null
 
     /**
      * Ensures that all updates will point to the correct listener. Also, disables listeners for
      * terminated streams.
      */
     @Suppress("UNCHECKED_CAST")
-    fun updateEventListeners(new: List<Update<*>>) {
+    fun updateEventListeners(new: List<BoundAction<*>>) {
         running?.forEach { existing ->
             val update = new.firstOrNull { it == existing }
             if (update != null) {
-                existing.handler = update.handler as (Any?) -> Unit
+                existing.listener = update.listener as (Any?) -> Unit
             } else {
-                existing.handler = NO_OP
+                existing.listener = NO_OP
             }
         }
     }
@@ -31,7 +31,7 @@ internal class UpdateManager {
     /**
      * Returns true if there was a transition while terminating streams.
      */
-    fun terminateOld(requested: List<Update<*>>, transitionId: TransitionId): Boolean {
+    fun terminateOld(requested: List<BoundAction<*>>, transitionId: TransitionId): Boolean {
         val iterator = running?.iterator() ?: return false
         while (iterator.hasNext()) {
             val running = iterator.next()
@@ -48,7 +48,7 @@ internal class UpdateManager {
         return false
     }
 
-    fun startNew(requested: List<Update<*>>, transitionId: TransitionId): Boolean {
+    fun startNew(requested: List<BoundAction<*>>, transitionId: TransitionId): Boolean {
         for (update in requested) {
             val running = getOrInitRunningStreamList()
             if (!isRunning(update)) {
@@ -72,22 +72,22 @@ internal class UpdateManager {
         }
     }
 
-    private fun shouldKeepRunning(updates: List<Update<*>>, update: Update<*>): Boolean {
+    private fun shouldKeepRunning(updates: List<BoundAction<*>>, update: BoundAction<*>): Boolean {
         return updates.contains(update)
     }
 
-    private fun isRunning(update: Update<*>): Boolean {
+    private fun isRunning(update: BoundAction<*>): Boolean {
         return running?.contains(update) ?: false
     }
 
-    private fun tearDownStream(stream: Update<*>) {
+    private fun tearDownStream(stream: BoundAction<*>) {
         stream.tearDown()
-        stream.handler = NO_OP
+        stream.listener = NO_OP
     }
 
-    private fun getOrInitRunningStreamList(): LinkedHashSet<Update<*>> {
+    private fun getOrInitRunningStreamList(): LinkedHashSet<BoundAction<*>> {
         return running ?: run {
-            val initialized: LinkedHashSet<Update<*>> = LinkedHashSet()
+            val initialized: LinkedHashSet<BoundAction<*>> = LinkedHashSet()
             this.running = initialized
             initialized
         }
