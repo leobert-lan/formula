@@ -2,23 +2,23 @@ package com.instacart.formula.test
 
 import com.google.common.truth.Truth.assertThat
 import com.instacart.formula.Cancelable
-import com.instacart.formula.Stream
+import com.instacart.formula.DisposableAction
 import org.junit.Test
 import java.lang.IllegalStateException
 
-class TestStreamTest {
+class TestDisposableActionTest {
 
     @Test fun `assert values success`() {
-        multipleValueStream().test().assertValues(1, 2)
+        multipleEventAction().test().assertValues(1, 2)
     }
 
     @Test fun `assert value fails due to different size`() {
-        val exception = fails { multipleValueStream().test().assertValues(1) }
+        val exception = fails { multipleEventAction().test().assertValues(1) }
         assertThat(exception).isInstanceOf(AssertionError::class.java)
     }
 
     @Test fun `assert value fails due to different value`() {
-        val exception = fails { multipleValueStream().test().assertValues(1, 5) }
+        val exception = fails { multipleEventAction().test().assertValues(1, 5) }
         assertThat(exception).isInstanceOf(AssertionError::class.java)
     }
 
@@ -32,7 +32,7 @@ class TestStreamTest {
         throw IllegalStateException("Action succeeded.")
     }
 
-    fun multipleValueStream() = object : Stream<Int> {
+    private fun multipleEventAction() = object : DisposableAction<Int> {
         override fun start(send: (Int) -> Unit): Cancelable? {
             send(1)
             send(2)

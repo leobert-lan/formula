@@ -240,7 +240,7 @@ abstract class FormulaContext<State> internal constructor(
 
             return BoundAction(
                 key = JoinedKey(action.key(), callback::class),
-                stream = action,
+                action = action,
                 listener = callback
             )
         }

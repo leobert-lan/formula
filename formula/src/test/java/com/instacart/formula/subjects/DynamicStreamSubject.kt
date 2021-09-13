@@ -2,6 +2,7 @@ package com.instacart.formula.subjects
 
 import com.google.common.truth.Truth.assertThat
 import com.instacart.formula.Cancelable
+import com.instacart.formula.DisposableAction
 import com.instacart.formula.Evaluation
 import com.instacart.formula.FormulaContext
 import com.instacart.formula.StatelessFormula
@@ -44,8 +45,8 @@ class DynamicStreamSubject(runtime: TestableRuntime) {
             )
         }
 
-        private fun stream(key: String): Stream<Unit> {
-            return object : Stream<Unit> {
+        private fun stream(key: String): DisposableAction<Unit> {
+            return object : DisposableAction<Unit> {
                 override fun start(send: (Unit) -> Unit): Cancelable? {
                     running.add(key)
                     return Cancelable {

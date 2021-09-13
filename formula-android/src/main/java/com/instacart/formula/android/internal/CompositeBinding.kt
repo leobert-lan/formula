@@ -1,9 +1,9 @@
 package com.instacart.formula.android.internal
 
+import com.instacart.formula.DisposableAction
 import com.instacart.formula.Evaluation
 import com.instacart.formula.Formula
 import com.instacart.formula.FormulaContext
-import com.instacart.formula.Stream
 import com.instacart.formula.android.DisposableScope
 
 /**
@@ -64,7 +64,7 @@ internal class CompositeBinding<ParentComponent, ScopedComponent>(
             output = Unit,
             updates = context.updates {
                 val isInScope = input.activeFragments.any { binds(it.key) }
-                events(Stream.onData(isInScope)) {
+                events(DisposableAction.onData(isInScope)) {
                     if (isInScope && component == null) {
                         transition(State(component = scopeFactory.invoke(input.component)))
                     } else if (!isInScope && component != null) {
@@ -76,7 +76,7 @@ internal class CompositeBinding<ParentComponent, ScopedComponent>(
                     }
                 }
 
-                events(Stream.onTerminate()) {
+                events(DisposableAction.onTerminate()) {
                     transition { component?.dispose() }
                 }
             }

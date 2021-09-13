@@ -1,9 +1,9 @@
 package com.instacart.formula.test
 
+import com.instacart.formula.DisposableAction
 import com.instacart.formula.Evaluation
 import com.instacart.formula.Formula
 import com.instacart.formula.FormulaContext
-import com.instacart.formula.Stream
 import java.lang.IllegalStateException
 
 /**
@@ -74,7 +74,7 @@ abstract class TestFormula<Input, Output> :
         return Evaluation(
             output = state.output,
             updates = context.updates {
-                Stream.onTerminate().onEvent {
+                DisposableAction.onTerminate().onEvent {
                     transition {
                         stateMap.remove(state.initialInput)
                     }

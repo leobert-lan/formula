@@ -50,7 +50,7 @@ class TaskDetailFormula @Inject constructor(
         return Evaluation(
             output = state.task,
             updates = context.updates {
-                RxStream.fromObservable { repo.fetchTask(input.taskId) }.onEvent { task ->
+                RxDisposableAction.fromObservable { repo.fetchTask(input.taskId) }.onEvent { task ->
                   val renderModel = TaskDetailRenderModel(
                       title = task.title,
                       // Don't do: calling context.onEvent within "onEvent" will cause a crash described above
@@ -100,7 +100,7 @@ class TaskDetailFormula @Inject constructor(
         return Evaluation(
             output = renderModel,
             updates = context.updates {
-                RxStream.fromObservable { repo.fetchTask(input.taskId) }.onEvent { task ->
+                RxDisposableAction.fromObservable { repo.fetchTask(input.taskId) }.onEvent { task ->
                    transition(state.copy(task = renderModel))
                 }
             }

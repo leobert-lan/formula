@@ -1,9 +1,9 @@
 package com.instacart.formula.subjects
 
+import com.instacart.formula.DisposableAction
 import com.instacart.formula.Evaluation
 import com.instacart.formula.Formula
 import com.instacart.formula.FormulaContext
-import com.instacart.formula.Stream
 
 object ExtremelyNestedFormula {
     class TestFormula(private val childFormula: Formula<Unit, *, Int>?) : Formula<Unit, Int, Int> {
@@ -23,7 +23,7 @@ object ExtremelyNestedFormula {
             return Evaluation(
                 output = state + childValue,
                 updates = context.updates {
-                    events(Stream.onInit()) {
+                    events(DisposableAction.onInit()) {
                         transition(state + 1)
                     }
                 }

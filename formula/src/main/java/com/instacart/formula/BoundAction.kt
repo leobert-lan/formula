@@ -5,14 +5,14 @@ package com.instacart.formula
  */
 class BoundAction<Message>(
     val key: Any,
-    val stream: Stream<Message>,
+    val action: DisposableAction<Message>,
     internal var listener: (Message) -> Unit
 ) {
 
     internal var cancelable: Cancelable? = null
 
     internal fun start() {
-        cancelable = stream.start() { message ->
+        cancelable = action.start() { message ->
             listener.invoke(message)
         }
     }

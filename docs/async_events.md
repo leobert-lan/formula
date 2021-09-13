@@ -15,8 +15,8 @@ override fun evaluate(input: Input, state: State, context: FormulaContext): ... 
     output = createRenderModel(state.taskList),
     // All async events need to be declared within "context.updates" block.
     updates = context.updates {
-      // Convert RxJava observable to a Formula Stream.
-      val taskStream = RxStream.fromObservable(taskRepo::tasks)
+      // Convert RxJava observable to a Formula disposable action.
+      val taskStream = RxDisposableAction.fromObservable(taskRepo::tasks)
       // Tell Formula that you want to listen to these events
       events(taskStream) { newTaskList ->
         // update our state
@@ -35,7 +35,7 @@ interface Stream<Message> {
 }
 ```
 
-In this example we used an `RxStream.fromObservable` to convert from an `Observable` to a `Stream` instance.
+In this example we used an `RxDisposableAction.fromObservable` to convert from an `Observable` to a `DisposableAction` instance.
 
 Instead of us subscribing to the observable/stream directly, the runtime manages the subscriptions for us.
 It will subscribe the first time `events` is called and unsubscribe when our Formula is removed or
@@ -43,7 +43,7 @@ if we don't return it anymore. For example, it is okay to have conditional logic
 ```kotlin
 context.updates {
   if (state.locationTrackingEnabled) {
-    val locationStream = RxStream.fromObservable { locationManager.updates() }
+    val locationStream = RxDisposableAction.fromObservable { locationManager.updates() }
     events(locationStream) { event ->
       transition(state.copy(location = event.location))
     }
@@ -81,7 +81,7 @@ class TaskFormula(val taskRepo: TaskRepo): Formula {
   ): Evaluation<Output> {
     return Evaluation(
       updates = context.updates {
-        val fetchTask = RxStream.fromObservable(key = input.taskId) { taskRepo.fetchTask(input.taskId) }
+        val fetchTask = RxDisposableAction.fromObservable(key = input.taskId) { taskRepo.fetchTask(input.taskId) }
         events(fetchTask) { taskResponse ->
           transition(state.copy(task = taskResponse))
         }
