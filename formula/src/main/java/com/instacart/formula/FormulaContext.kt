@@ -142,7 +142,12 @@ abstract class FormulaContext<State> internal constructor(
     /**
      * Provides an [UpdateBuilder] that enables [Formula] to declare various events and effects.
      */
-    abstract fun updates(init: UpdateBuilder<State>.() -> Unit): List<BoundAction<*>>
+    fun updates(init: UpdateBuilder<State>.() -> Unit): List<BoundAction<*>> = actions(init)
+
+    /**
+     * Provides an [UpdateBuilder] that enables [Formula] to declare various events and effects.
+     */
+    abstract fun actions(init: UpdateBuilder<State>.() -> Unit): List<BoundAction<*>>
 
     /**
      * Scopes [create] block with a [key].
@@ -164,65 +169,68 @@ abstract class FormulaContext<State> internal constructor(
     class UpdateBuilder<State>(
         @PublishedApi internal val transitionCallback: (Transition<State>) -> Unit
     ) {
-        internal val updates = mutableListOf<BoundAction<*>>()
+        internal val actions = mutableListOf<BoundAction<*>>()
 
         /**
-         * Adds a [Stream] as part of this [Evaluation]. [Stream] will be subscribed when it is initially added
-         * and unsubscribed when it is not returned as part of [Evaluation].
+         * Adds a [DisposableAction] as part of this [Evaluation]. [DisposableAction] will be
+         * subscribed when it is initially added and unsubscribed when it is not
+         * returned as part of [Evaluation].
          *
-         * @param transition Callback invoked when [Stream] sends us a [Message].
+         * @param transition Callback invoked when [DisposableAction] sends us a [Message].
          */
         inline fun <Message> events(
-            stream: Stream<Message>,
+            action: DisposableAction<Message>,
             crossinline transition: Transition.Factory.(Message) -> Transition<State>
         ) {
-            add(createConnection(stream, transition))
+            add(toBoundAction(action, transition))
         }
 
         /**
-         * Adds a [Stream] as part of this [Evaluation]. [Stream] will be subscribed when it is initially added
-         * and unsubscribed when it is not returned as part of [Evaluation].
+         * Adds a [DisposableAction] as part of this [Evaluation]. [DisposableAction] will be
+         * subscribed when it is initially added and unsubscribed when it is not returned
+         * as part of [Evaluation].
          *
-         * @param transition Callback invoked when [Stream] sends us a [Message].
+         * @param transition Callback invoked when [DisposableAction] sends us a [Message].
          */
         inline fun <Message> onEvent(
-            stream: Stream<Message>,
+            action: DisposableAction<Message>,
             avoidParameterClash: Any = this,
             crossinline transition: Transition.Factory.(Message) -> Transition<State>
         ) {
-            add(createConnection(stream, transition))
+            add(toBoundAction(action, transition))
         }
 
         /**
-         * Adds a [Stream] as part of this [Evaluation]. [Stream] will be subscribed when it is initially added
-         * and unsubscribed when it is not returned as part of [Evaluation].
+         * Adds a [DisposableAction] as part of this [Evaluation]. [DisposableAction] will be
+         * subscribed when it is initially added and unsubscribed when it is not returned
+         * as part of [Evaluation].
          *
-         * @param transition Callback invoked when [Stream] sends us a [Message].
+         * @param transition Callback invoked when [DisposableAction] sends us a [Message].
          *
          * Example:
          * ```
-         * Stream.onInit().onEvent {
+         * DisposableAction.onInit().onEvent {
          *   transition { /* */ }
          * }
          * ```
          */
-        inline fun <Message> Stream<Message>.onEvent(
+        inline fun <Message> DisposableAction<Message>.onEvent(
             crossinline transition: Transition.Factory.(Message) -> Transition<State>
         ) {
             val stream = this
             this@UpdateBuilder.events(stream, transition)
         }
 
-        @PublishedApi internal fun add(connection: BoundAction<*>) {
-            if (updates.contains(connection)) {
-                throw IllegalStateException("duplicate stream with key: ${connection.keyAsString()}")
+        @PublishedApi internal fun add(action: BoundAction<*>) {
+            if (actions.contains(action)) {
+                throw IllegalStateException("duplicate stream with key: ${action.keyAsString()}")
             }
 
-            updates.add(connection)
+            actions.add(action)
         }
 
-        @PublishedApi internal inline fun <Message> createConnection(
-            stream: Stream<Message>,
+        @PublishedApi internal inline fun <Message> toBoundAction(
+            action: DisposableAction<Message>,
             crossinline transition: Transition.Factory.(Message) -> Transition<State>
         ): BoundAction<Message> {
             val callback: (Message) -> Unit = {
@@ -231,8 +239,8 @@ abstract class FormulaContext<State> internal constructor(
             }
 
             return BoundAction(
-                key = JoinedKey(stream.key(), callback::class),
-                stream = stream,
+                key = JoinedKey(action.key(), callback::class),
+                stream = action,
                 listener = callback
             )
         }

@@ -14,7 +14,12 @@ data class Evaluation<out Output>(
 ) {
 
     companion object {
-        @Deprecated("Replace `updates` with `actions`.")
+        @Deprecated(
+            "Replace `updates` with `actions`.", ReplaceWith(
+                "Evaluation(output = output, actions = updates)",
+                "com.instacart.formula.Evaluation"
+            )
+        )
         operator fun <Output> invoke(output: Output, updates: List<BoundAction<*>>): Evaluation<Output> {
             return Evaluation(
                 output = output,
