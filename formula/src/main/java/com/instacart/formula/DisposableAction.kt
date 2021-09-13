@@ -5,7 +5,7 @@ package com.instacart.formula
  * value of [key] and will be be cleaned up if [key] changes or if [DisposableAction] is
  * left out of evaluation.
  *
- * Disposable action can produce and send [messages][Message] back the [Formula] instance. It
+ * Disposable action can produce and send [messages][Message] back to the [Formula] instance. It
  * can be used to subscribe to RxJava observables, Kotlin Flows, event bus, or any other event
  * mechanism.
  *
@@ -52,9 +52,9 @@ interface DisposableAction<Message> {
         /**
          * Emits a message with [data] when [DisposableAction] is initialized. Uses [data] as key.
          *
-         * Use this stream to send a effects with latest [Data] value.
+         * Use this stream to perform an action with the latest [Data] value.
          * ```
-         * events(Stream.onData(itemId)) {
+         * events(DisposableAction.onData(itemId)) {
          *   transition { api.fetchItem(itemId) }
          * }
          * ```
@@ -66,7 +66,7 @@ interface DisposableAction<Message> {
         /**
          * Emits a message when [Formula] is terminated.
          * ```
-         * events(Stream.onTerminate()) {
+         * events(DisposableAction.onTerminate()) {
          *   transition { analytics.trackCloseEvent() }
          * }
          * ```

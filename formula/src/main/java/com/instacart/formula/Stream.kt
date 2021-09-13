@@ -19,7 +19,7 @@ package com.instacart.formula
 typealias Stream<Message> = DisposableAction<Message>
 
 /**
- * Emits a message as soon as [Stream] is initialized.
+ * Emits a message as soon as [DisposableAction] is initialized.
  */
 internal class StartMessageStream<Data>(
     private val data: Data

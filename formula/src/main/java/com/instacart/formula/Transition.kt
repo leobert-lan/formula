@@ -30,7 +30,7 @@ sealed class Transition<out State> {
     data class Stateful<State>(val state: State, override val action: Action? = null) : Transition<State>()
 
     /**
-     * Only action is emitted as part of this transition.
+     * Only an action is emitted as part of this transition.
      *
      * @param action A deferred action that will be executed by the Formula runtime. Within
      * this action block, you can trigger listeners, log analytics, trigger database writes,

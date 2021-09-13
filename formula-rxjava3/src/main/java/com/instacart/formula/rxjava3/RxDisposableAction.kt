@@ -13,7 +13,7 @@ interface RxDisposableAction<Message> : DisposableAction<Message> {
          * Creates a [DisposableAction] from an [Observable] factory [create].
          *
          * ```
-         * events(RxStream.fromObservable { locationManager.updates() }) { event ->
+         * RxDisposableAction.fromObservable { locationManager.updates() }.onEvent { event ->
          *   transition()
          * }
          * ```
@@ -35,7 +35,7 @@ interface RxDisposableAction<Message> : DisposableAction<Message> {
          * Creates a [DisposableAction] from an [Observable] factory [create].
          *
          * ```
-         * events(RxStream.fromObservable(itemId) { repo.fetchItem(itemId) }) { event ->
+         * RxDisposableAction.fromObservable(itemId) { repo.fetchItem(itemId) }.onEvent { event ->
          *   transition()
          * }
          * ```
