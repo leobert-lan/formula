@@ -33,7 +33,7 @@ class EffectOrderFormula : Formula<EffectOrderFormula.Input, EffectOrderFormula.
     override fun evaluate(
         input: Input,
         state: State,
-        context: FormulaContext<State>
+        context: FormulaContext,
     ): Evaluation<Output> {
         return Evaluation(
             output = Output(

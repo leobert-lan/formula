@@ -11,7 +11,7 @@ class RemovingTerminateStreamSendsNoMessagesFormula : StatelessFormula<RemovingT
         val onTerminate: (() -> Unit)? = null
     )
 
-    override fun evaluate(input: Input, context: FormulaContext<Unit>): Evaluation<Unit> {
+    override fun evaluate(input: Input, context: FormulaContext): Evaluation<Unit> {
         return Evaluation(
             output = Unit,
             updates = context.updates {

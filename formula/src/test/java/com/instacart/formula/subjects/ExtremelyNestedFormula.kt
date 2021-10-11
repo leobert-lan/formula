@@ -12,7 +12,7 @@ object ExtremelyNestedFormula {
         override fun evaluate(
             input: Unit,
             state: Int,
-            context: FormulaContext<Int>
+            context: FormulaContext,
         ): Evaluation<Int> {
             val childValue = if (childFormula != null) {
                 context.child(childFormula)

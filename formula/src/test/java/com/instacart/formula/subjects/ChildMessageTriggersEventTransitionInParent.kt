@@ -36,7 +36,7 @@ object ChildMessageTriggersEventTransitionInParent {
         override fun evaluate(
             input: Unit,
             state: Int,
-            context: FormulaContext<Int>
+            context: FormulaContext,
         ): Evaluation<RenderModel> {
             return Evaluation(
                 output = RenderModel(

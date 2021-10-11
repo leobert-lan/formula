@@ -2,12 +2,12 @@ package com.instacart.formula.subjects
 
 import com.instacart.formula.Evaluation
 import com.instacart.formula.Formula
-import com.instacart.formula.FormulaContext
 import com.instacart.formula.IFormula
 
 class HasChildFormula<ChildInput, ChildOutput>(
     private val child: IFormula<ChildInput, ChildOutput>,
-    private val createChildInput: FormulaContext<Int>.(Int) -> ChildInput
+    // TODO: need BaseFormulaContext, eh?
+    private val createChildInput: com.instacart.formula.FormulaContext<Int>.(Int) -> ChildInput
 ) : Formula<Unit, Int, HasChildFormula.Output<ChildOutput>>() {
     companion object {
         operator fun <ChildOutput> invoke(
@@ -28,7 +28,7 @@ class HasChildFormula<ChildInput, ChildOutput>(
     override fun evaluate(
         input: Unit,
         state: Int,
-        context: FormulaContext<Int>
+        context: FormulaContext,
     ): Evaluation<Output<ChildOutput>> {
         return Evaluation(
             output = Output(

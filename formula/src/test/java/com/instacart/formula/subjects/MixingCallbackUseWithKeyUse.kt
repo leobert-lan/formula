@@ -19,7 +19,7 @@ class MixingCallbackUseWithKeyUse {
         override fun evaluate(
             input: Unit,
             state: Unit,
-            context: FormulaContext<Unit>
+            context: FormulaContext,
         ): Evaluation<ParentOutput> {
             return Evaluation(
                 output = ParentOutput(

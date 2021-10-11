@@ -15,6 +15,21 @@ package com.instacart.formula
  */
 abstract class Formula<in Input, State, out Output> : IFormula<Input, Output> {
 
+    public inner class FormulaContext internal constructor(
+        private val baseContext: com.instacart.formula.FormulaContext<State>,
+    ) : com.instacart.formula.FormulaContext<State>(baseContext.listeners, baseContext.transitionDispatcher) {
+        override fun <ChildInput, ChildOutput> child(
+            formula: IFormula<ChildInput, ChildOutput>,
+            input: ChildInput
+        ): ChildOutput {
+            return baseContext.child(formula, input)
+        }
+
+        override fun updates(init: StreamBuilder<State>.() -> Unit): List<BoundStream<*>> {
+            return baseContext.updates(init)
+        }
+    }
+
     /**
      * Creates the initial [state][State] to be used in [evaluation][Formula.evaluate]. This
      * method is called when formula first starts running or when the [key] changes.
@@ -47,7 +62,7 @@ abstract class Formula<in Input, State, out Output> : IFormula<Input, Output> {
     abstract fun evaluate(
         input: Input,
         state: State,
-        context: FormulaContext<State>
+        context: FormulaContext,
     ): Evaluation<Output>
 
     /**

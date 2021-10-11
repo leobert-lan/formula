@@ -4,7 +4,6 @@ import com.examples.todoapp.data.Task
 import com.examples.todoapp.data.TaskRepo
 import com.instacart.formula.Evaluation
 import com.instacart.formula.Formula
-import com.instacart.formula.FormulaContext
 import com.instacart.formula.rxjava3.RxStream
 
 class TaskListFormula(
@@ -22,7 +21,7 @@ class TaskListFormula(
     override fun evaluate(
         input: Input,
         state: TaskListState,
-        context: FormulaContext<TaskListState>
+        context: FormulaContext,
     ): Evaluation<TaskListRenderModel> {
         val items = taskList(state).map { task ->
             context.key(task.id) {
@@ -73,7 +72,7 @@ class TaskListFormula(
 
     private fun filterOptions(
         state: TaskListState,
-        context: FormulaContext<TaskListState>
+        context: FormulaContext,
     ): List<TaskFilterRenderModel> {
         return TasksFilterType.values().map { type ->
             context.key(type.name) {

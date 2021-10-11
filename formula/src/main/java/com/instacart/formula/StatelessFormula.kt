@@ -12,6 +12,21 @@ package com.instacart.formula
  */
 abstract class StatelessFormula<Input, Output> : IFormula<Input, Output> {
 
+    public inner class FormulaContext internal constructor(
+        private val baseContext: com.instacart.formula.FormulaContext<Unit>,
+    ) : com.instacart.formula.FormulaContext<Unit>(baseContext.listeners, baseContext.transitionDispatcher) {
+        override fun <ChildInput, ChildOutput> child(
+            formula: IFormula<ChildInput, ChildOutput>,
+            input: ChildInput
+        ): ChildOutput {
+            return baseContext.child(formula, input)
+        }
+
+        override fun updates(init: StreamBuilder<Unit>.() -> Unit): List<BoundStream<*>> {
+            return baseContext.updates(init)
+        }
+    }
+
     // Implements the common API used by the runtime.
     private val implementation = object : Formula<Input, Unit, Output>() {
         override fun initialState(input: Input) = Unit
@@ -19,9 +34,9 @@ abstract class StatelessFormula<Input, Output> : IFormula<Input, Output> {
         override fun evaluate(
             input: Input,
             state: Unit,
-            context: FormulaContext<Unit>
+            context: FormulaContext
         ): Evaluation<Output> {
-            return evaluate(input, context)
+            return evaluate(input, this@StatelessFormula.FormulaContext(context))
         }
     }
 
@@ -39,7 +54,7 @@ abstract class StatelessFormula<Input, Output> : IFormula<Input, Output> {
      */
      abstract fun evaluate(
         input: Input,
-        context: FormulaContext<Unit>
+        context: FormulaContext
     ): Evaluation<Output>
 
     /**

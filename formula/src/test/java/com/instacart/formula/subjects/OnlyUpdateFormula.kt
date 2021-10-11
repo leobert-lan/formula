@@ -9,7 +9,7 @@ class OnlyUpdateFormula<Input>(
     private val build: StreamBuilder<Unit>.(Input) -> Unit
 ) : StatelessFormula<Input, Unit>() {
 
-    override fun evaluate(input: Input, context: FormulaContext<Unit>): Evaluation<Unit> {
+    override fun evaluate(input: Input, context: FormulaContext): Evaluation<Unit> {
         return Evaluation(
             output = Unit,
             updates = context.updates {

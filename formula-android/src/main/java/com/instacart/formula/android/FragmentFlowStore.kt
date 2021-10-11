@@ -63,7 +63,7 @@ class FragmentFlowStore @PublishedApi internal constructor(
     override fun evaluate(
         input: FragmentEnvironment,
         state: FragmentFlowState,
-        context: FormulaContext<FragmentFlowState>
+        context: FormulaContext,
     ): Evaluation<FragmentFlowState> {
         val rootInput = Binding.Input(
             environment = input,

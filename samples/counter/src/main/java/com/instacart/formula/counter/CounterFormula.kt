@@ -11,7 +11,7 @@ class CounterFormula : Formula<Unit, Int, CounterRenderModel>() {
     override fun evaluate(
         input: Unit,
         state: Int,
-        context: FormulaContext<Int>
+        context: FormulaContext,
     ): Evaluation<CounterRenderModel> {
         return Evaluation(
             output = CounterRenderModel(

@@ -11,7 +11,7 @@ import kotlin.reflect.KClass
 class TerminateFormula : StatelessFormula<Unit, Unit>() {
     var timesTerminateCalled = 0
 
-    override fun evaluate(input: Unit, context: FormulaContext<Unit>): Evaluation<Unit> {
+    override fun evaluate(input: Unit, context: FormulaContext): Evaluation<Unit> {
         return Evaluation(
             output = Unit,
             updates = context.updates {

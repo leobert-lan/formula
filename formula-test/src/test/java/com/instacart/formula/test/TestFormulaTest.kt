@@ -51,7 +51,7 @@ class TestFormulaTest {
         override fun evaluate(
             input: Unit,
             state: State,
-            context: FormulaContext<State>
+            context: FormulaContext,
         ): Evaluation<Output> {
             return Evaluation(
                 output = Output(

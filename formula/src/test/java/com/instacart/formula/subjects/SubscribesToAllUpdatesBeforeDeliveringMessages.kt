@@ -17,7 +17,7 @@ object SubscribesToAllUpdatesBeforeDeliveringMessages {
 
         override fun initialState(input: Unit): Int = 0
 
-        override fun evaluate(input: Unit, state: Int, context: FormulaContext<Int>): Evaluation<Int> {
+        override fun evaluate(input: Unit, state: Int, context: FormulaContext): Evaluation<Int> {
             return Evaluation(
                 output = state,
                 updates = context.updates {

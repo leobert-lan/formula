@@ -20,7 +20,7 @@ class ItemPageFormula : StatelessFormula<Unit, ItemPageRenderModel>() {
 
     override fun evaluate(
         input: Unit,
-        context: FormulaContext<Unit>
+        context: FormulaContext
     ): Evaluation<ItemPageRenderModel> {
         val items = items.map {
             context.child(itemFormula, ItemFormula.Input(itemName = it))

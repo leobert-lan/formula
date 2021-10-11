@@ -25,7 +25,7 @@ internal class FeatureBinding<in Component, in Dependencies, in Key : FragmentKe
         override fun evaluate(
             input: Input<Component>,
             state: Unit,
-            context: FormulaContext<Unit>
+            context: FormulaContext,
         ): Evaluation<Unit> {
             return Evaluation(
                 output = state,

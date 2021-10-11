@@ -8,7 +8,7 @@ class KeyFormula : StatelessFormula<TestKey, TestOutput>() {
 
     override fun key(input: TestKey): Any = input
 
-    override fun evaluate(input: TestKey, context: FormulaContext<Unit>): Evaluation<TestOutput> {
+    override fun evaluate(input: TestKey, context: FormulaContext): Evaluation<TestOutput> {
         return Evaluation(
             output = TestOutput(
                 input = input,

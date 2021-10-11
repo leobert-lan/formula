@@ -24,7 +24,7 @@ abstract class StreamFormula<Input : Any, Output : Any> : IFormula<Input, Output
         override fun evaluate(
             input: Input,
             state: Output,
-            context: FormulaContext<Output>
+            context: FormulaContext,
         ): Evaluation<Output> {
             return Evaluation(
                 output = state,

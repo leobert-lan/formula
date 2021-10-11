@@ -12,7 +12,7 @@ object StreamInitMessageDeliveredOnce {
     class TestFormula : StatelessFormula<Unit, Unit>() {
         var timesInitializedCalled = 0
 
-        override fun evaluate(input: Unit, context: FormulaContext<Unit>): Evaluation<Unit> {
+        override fun evaluate(input: Unit, context: FormulaContext): Evaluation<Unit> {
 
             return Evaluation(
                 output = Unit,

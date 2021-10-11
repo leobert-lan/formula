@@ -22,7 +22,7 @@ class FromObservableWithInputFormula : StatelessFormula<FromObservableWithInputF
 
     private val repo = Repo()
 
-    override fun evaluate(input: Input, context: FormulaContext<Unit>): Evaluation<Unit> {
+    override fun evaluate(input: Input, context: FormulaContext): Evaluation<Unit> {
         return Evaluation(
             output = Unit,
             updates = context.updates {

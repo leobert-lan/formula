@@ -83,7 +83,7 @@ internal class FormulaManagerImpl<Input, State, Output>(
         listeners.evaluationStarted()
         val transitionDispatcher = TransitionDispatcher(state, this::handleTransitionResult, transitionId)
         val context = FormulaContextImpl(transitionId, listeners, this, transitionDispatcher)
-        val result = formula.evaluate(input, state, context)
+        val result = formula.evaluate(input, state, formula.FormulaContext(context))
         val frame = Frame(input, state, result, transitionDispatcher)
         updateManager.updateEventListeners(frame.evaluation.updates)
         this.frame = frame

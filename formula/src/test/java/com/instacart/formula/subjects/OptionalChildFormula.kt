@@ -2,13 +2,13 @@ package com.instacart.formula.subjects
 
 import com.instacart.formula.Evaluation
 import com.instacart.formula.Formula
-import com.instacart.formula.FormulaContext
 import com.instacart.formula.IFormula
 import com.instacart.formula.Listener
 
 class OptionalChildFormula<ChildInput, ChildOutput>(
     private val child: IFormula<ChildInput, ChildOutput>,
-    private val childInput: FormulaContext<State>.(State) -> ChildInput
+    // TODO: probably better to reference as BaseFormulaContext
+    private val childInput: com.instacart.formula.FormulaContext<State>.(State) -> ChildInput
 ): Formula<Unit, OptionalChildFormula.State, OptionalChildFormula.Output<ChildOutput>>() {
     companion object {
         operator fun <ChildOutput> invoke(child: IFormula<Unit, ChildOutput>) = run {
@@ -30,7 +30,7 @@ class OptionalChildFormula<ChildInput, ChildOutput>(
     override fun evaluate(
         input: Unit,
         state: State,
-        context: FormulaContext<State>
+        context: FormulaContext,
     ): Evaluation<Output<ChildOutput>> {
         val childOutput = if (state.showChild) {
             context.child(child, childInput(context, state))

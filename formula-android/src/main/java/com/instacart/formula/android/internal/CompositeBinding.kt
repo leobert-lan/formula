@@ -33,7 +33,7 @@ internal class CompositeBinding<ParentComponent, ScopedComponent>(
         override fun evaluate(
             input: Input<ParentComponent>,
             state: State<ScopedComponent>,
-            context: FormulaContext<State<ScopedComponent>>
+            context: FormulaContext,
         ): Evaluation<Unit> {
             val component = state.component
             if (component != null) {
@@ -70,7 +70,6 @@ internal class CompositeBinding<ParentComponent, ScopedComponent>(
             )
         }
     }
-
 
     override fun types(): Set<Class<*>> = types
 

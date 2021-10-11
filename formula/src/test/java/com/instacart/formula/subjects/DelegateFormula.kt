@@ -20,7 +20,7 @@ class DelegateFormula<Type>(
     override fun evaluate(
         input: Unit,
         state: Type,
-        context: FormulaContext<Type>
+        context: FormulaContext,
     ): Evaluation<Output<Type>> {
         return Evaluation(
             output = Output(

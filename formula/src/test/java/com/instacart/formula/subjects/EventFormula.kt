@@ -2,7 +2,6 @@ package com.instacart.formula.subjects
 
 import com.instacart.formula.Evaluation
 import com.instacart.formula.Formula
-import com.instacart.formula.FormulaContext
 import com.instacart.formula.test.TestEventCallback
 import com.instacart.formula.test.TestableRuntime
 
@@ -27,7 +26,7 @@ class EventFormula<EventT>(
     override fun evaluate(
         input: Unit,
         state: Int,
-        context: FormulaContext<Int>
+        context: FormulaContext,
     ): Evaluation<Int> {
 
         return Evaluation(

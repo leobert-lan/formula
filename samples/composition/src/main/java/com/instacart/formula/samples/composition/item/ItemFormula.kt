@@ -21,7 +21,7 @@ class ItemFormula : Formula<ItemFormula.Input, ItemFormula.State, ItemRenderMode
     override fun evaluate(
         input: Input,
         state: State,
-        context: FormulaContext<State>
+        context: FormulaContext,
     ): Evaluation<ItemRenderModel> {
         return Evaluation(
             output = ItemRenderModel(

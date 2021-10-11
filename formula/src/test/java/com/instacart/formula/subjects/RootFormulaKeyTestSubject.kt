@@ -43,7 +43,7 @@ class RootFormulaKeyTestSubject(runtime: TestableRuntime) {
         override fun evaluate(
             input: Int,
             state: Int,
-            context: FormulaContext<Int>
+            context: FormulaContext
         ): Evaluation<Output> {
             return Evaluation(
                 output = Output(

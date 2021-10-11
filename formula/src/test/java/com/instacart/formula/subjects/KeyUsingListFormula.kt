@@ -28,7 +28,7 @@ class KeyUsingListFormula :
     override fun evaluate(
         input: Input,
         state: State,
-        context: FormulaContext<State>
+        context: FormulaContext,
     ): Evaluation<Output> {
 
         val items = state.items.map { itemName ->

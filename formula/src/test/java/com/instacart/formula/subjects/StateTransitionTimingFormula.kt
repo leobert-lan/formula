@@ -27,7 +27,7 @@ class StateTransitionTimingFormula(
     override fun evaluate(
         input: Unit,
         state: List<State>,
-        context: FormulaContext<List<State>>
+        context: FormulaContext,
     ): Evaluation<Output> {
         return Evaluation(
             output = Output(

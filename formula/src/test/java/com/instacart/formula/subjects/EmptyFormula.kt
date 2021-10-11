@@ -5,7 +5,7 @@ import com.instacart.formula.FormulaContext
 import com.instacart.formula.StatelessFormula
 
 class EmptyFormula: StatelessFormula<Unit, Unit>() {
-    override fun evaluate(input: Unit, context: FormulaContext<Unit>): Evaluation<Unit> {
+    override fun evaluate(input: Unit, context: FormulaContext): Evaluation<Unit> {
         return Evaluation(output = Unit)
     }
 }

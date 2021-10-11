@@ -8,7 +8,7 @@ import com.instacart.formula.Stream
 class StreamInputFormula : StatelessFormula<Int, Unit>()  {
     val messages = mutableListOf<Int>()
 
-    override fun evaluate(input: Int, context: FormulaContext<Unit>): Evaluation<Unit> {
+    override fun evaluate(input: Int, context: FormulaContext): Evaluation<Unit> {
         return Evaluation(
             output = Unit,
             updates = context.updates {

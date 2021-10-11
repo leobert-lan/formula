@@ -15,7 +15,7 @@ class NetworkStateFormula(
     override fun evaluate(
         input: Unit,
         state: State,
-        context: FormulaContext<State>
+        context: FormulaContext
     ): Evaluation<NetworkStateRenderModel> {
         val isConnected = if (state.isOnline) "CONNECTED" else "OFFLINE"
         return Evaluation(

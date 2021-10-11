@@ -13,7 +13,7 @@ class EventCallbackFormula : Formula<Unit, String, EventCallbackFormula.Output>(
 
     override fun initialState(input: Unit): String = ""
 
-    override fun evaluate(input: Unit, state: String, context: FormulaContext<String>): Evaluation<Output> {
+    override fun evaluate(input: Unit, state: String, context: FormulaContext): Evaluation<Output> {
         return Evaluation(
             output = Output(
                 state = state,

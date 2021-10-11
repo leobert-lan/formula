@@ -30,7 +30,7 @@ class StartStopFormula(runtime: TestableRuntime) : Formula<Unit, State, Output>(
     override fun evaluate(
         input: Unit,
         state: State,
-        context: FormulaContext<State>
+        context: FormulaContext,
     ): Evaluation<Output> {
         return Evaluation(
             updates = context.updates {

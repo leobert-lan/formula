@@ -31,7 +31,7 @@ class DynamicStreamSubject(runtime: TestableRuntime) {
     class TestFormula : StatelessFormula<List<String>, Unit>() {
         val running = mutableListOf<String>()
 
-        override fun evaluate(input: List<String>, context: FormulaContext<Unit>): Evaluation<Unit> {
+        override fun evaluate(input: List<String>, context: FormulaContext): Evaluation<Unit> {
             return Evaluation(
                 output = Unit,
                 updates = context.updates {

@@ -62,7 +62,7 @@ abstract class TestFormula<Input, Output> :
     override fun evaluate(
         input: Input,
         state: State<Input, Output>,
-        context: FormulaContext<State<Input, Output>>
+        context: FormulaContext,
     ): Evaluation<Output> {
         stateMap[state.initialInput] = Value(
             input = input,

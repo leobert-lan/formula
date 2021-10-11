@@ -15,7 +15,7 @@ class UseInputFormula<Type> : Formula<Type, Type, Type>() {
     override fun evaluate(
         input: Type,
         state: Type,
-        context: FormulaContext<Type>
+        context: FormulaContext,
     ): Evaluation<Type> {
         return Evaluation(output = state)
     }

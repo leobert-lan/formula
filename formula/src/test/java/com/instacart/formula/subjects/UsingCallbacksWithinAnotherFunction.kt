@@ -16,7 +16,7 @@ object UsingCallbacksWithinAnotherFunction {
     )
 
     class TestFormula : StatelessFormula<Unit, TestOutput>() {
-        override fun evaluate(input: Unit, context: FormulaContext<Unit>): Evaluation<TestOutput> {
+        override fun evaluate(input: Unit, context: FormulaContext): Evaluation<TestOutput> {
             return Evaluation(
                 output = TestOutput(
                     first = createDefaultCallback(context),
@@ -25,7 +25,7 @@ object UsingCallbacksWithinAnotherFunction {
             )
         }
 
-        private fun createDefaultCallback(context: FormulaContext<Unit>): Listener<Unit> {
+        private fun createDefaultCallback(context: FormulaContext): Listener<Unit> {
             return context.onEvent {
                 none()
             }

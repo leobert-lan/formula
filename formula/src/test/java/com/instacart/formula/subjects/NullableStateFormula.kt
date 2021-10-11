@@ -16,7 +16,7 @@ class NullableStateFormula : Formula<Unit, String?, NullableStateFormula.Output>
     override fun evaluate(
         input: Unit,
         state: String?,
-        context: FormulaContext<String?>
+        context: FormulaContext,
     ): Evaluation<Output> {
         return Evaluation(
             output = Output(

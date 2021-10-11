@@ -15,7 +15,7 @@ class SideEffectFormula(
 
     override fun initialState(input: Unit): Int = 0
 
-    override fun evaluate(input: Unit, state: Int, context: FormulaContext<Int>): Evaluation<Output> {
+    override fun evaluate(input: Unit, state: Int, context: FormulaContext): Evaluation<Output> {
         return Evaluation(
             output = Output(
                 triggerSideEffect = context.onEvent {

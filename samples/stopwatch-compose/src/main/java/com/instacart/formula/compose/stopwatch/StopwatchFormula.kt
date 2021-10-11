@@ -23,7 +23,7 @@ class StopwatchFormula : Formula<Unit, StopwatchFormula.State, StopwatchRenderMo
     override fun evaluate(
         input: Unit,
         state: State,
-        context: FormulaContext<State>
+        context: FormulaContext,
     ): Evaluation<StopwatchRenderModel> {
         return Evaluation(
             output = StopwatchRenderModel(
