@@ -19,7 +19,7 @@ internal class FormulaManagerImpl<Input, State, Output>(
     initialInput: Input,
     private val listeners: ScopedListeners,
     private val transitionListener: TransitionListener
-) : SnapshotImpl.Delegate, FormulaManager<Input, Output> {
+) : SnapshotImpl.Delegate<State>, FormulaManager<Input, Output> {
 
     constructor(
         formula: Formula<Input, State, Output>,
@@ -38,7 +38,7 @@ internal class FormulaManagerImpl<Input, State, Output>(
 
     private var childTransitionListener: TransitionListener? = null
 
-    private fun handleTransitionResult(result: Transition.Result<State>) {
+    override fun handleTransitionResult(result: Transition.Result<State>) {
         if (terminated) {
             // State transitions are ignored, only side effects are passed up to be executed.
             transitionListener.onTransitionResult(result, true)
@@ -56,7 +56,7 @@ internal class FormulaManagerImpl<Input, State, Output>(
 
     override fun updateTransitionId(transitionId: TransitionId) {
         val lastFrame = checkNotNull(frame) { "missing frame means this is called before initial evaluate" }
-        lastFrame.transitionDispatcher.transitionId = transitionId
+        lastFrame.context.transitionId = transitionId
 
         children?.forEachValue { it.updateTransitionId(transitionId) }
     }
@@ -81,10 +81,9 @@ internal class FormulaManagerImpl<Input, State, Output>(
         }
 
         listeners.evaluationStarted()
-        val transitionDispatcher = TransitionDispatcher(input, state, this::handleTransitionResult, transitionId)
-        val snapshot = SnapshotImpl(transitionId, listeners, this, transitionDispatcher)
-        val result = snapshot.run { formula.run { evaluate() } }
-        val frame = Frame(input, state, result, transitionDispatcher)
+        val snapshot = SnapshotImpl(input, state, transitionId, listeners, this)
+        val evaluation = snapshot.run { formula.run { evaluate() } }
+        val frame = Frame(snapshot, evaluation)
         updateManager.updateEventListeners(frame.evaluation.updates)
         this.frame = frame
 
@@ -96,8 +95,8 @@ internal class FormulaManagerImpl<Input, State, Output>(
             pendingRemoval?.add(it)
         }
 
-        transitionDispatcher.running = true
-        return result
+        snapshot.running = true
+        return evaluation
     }
 
     override fun terminateDetachedChildren(transitionId: TransitionId): Boolean {
@@ -175,7 +174,7 @@ internal class FormulaManagerImpl<Input, State, Output>(
 
     override fun markAsTerminated() {
         terminated = true
-        frame?.transitionDispatcher?.terminated = true
+        frame?.context?.terminated = true
         children?.forEachValue { it.markAsTerminated() }
     }
 

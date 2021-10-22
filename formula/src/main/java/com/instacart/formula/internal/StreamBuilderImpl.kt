@@ -10,7 +10,7 @@ import com.instacart.formula.Transition
  * Implements [StreamBuilder] interface.
  */
 internal class StreamBuilderImpl<out Input, State> internal constructor(
-    private val snapshot: Snapshot<Input, State>,
+    private val snapshot: SnapshotImpl<Input, State>,
 ) : StreamBuilder<Input, State>(
     input = snapshot.input,
     state = snapshot.state,
@@ -52,7 +52,7 @@ internal class StreamBuilderImpl<out Input, State> internal constructor(
         transition: Transition<Input, State, Event>,
     ): BoundStream<Event> {
         val key = JoinedKey(stream.key(), transition.type())
-        val listener = snapshot.context.eventListener(key, transition)
+        val listener = snapshot.eventListener(key, transition)
         return BoundStream(
             key = key,
             stream = stream,

@@ -7,13 +7,15 @@ import com.instacart.formula.Evaluation
  * we need to look at what children and updates exist and do a diff.
  */
 internal class Frame<Input, State, Output>(
-    val input: Input,
-    val state: State,
+    val context: SnapshotImpl<Input, State>,
     val evaluation: Evaluation<Output>,
-    val transitionDispatcher: TransitionDispatcher<Input, State>
 ) {
+
     private var stateValid: Boolean = true
     private var childrenValid: Boolean = true
+
+    val input: Input = context.input
+    val state: State = context.state
 
     fun updateStateValidity(state: State) {
         if (stateValid && this.state != state) {

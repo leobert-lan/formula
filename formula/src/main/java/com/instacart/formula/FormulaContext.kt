@@ -1,9 +1,6 @@
 package com.instacart.formula
 
-import com.instacart.formula.internal.JoinedKey
 import com.instacart.formula.internal.ScopedListeners
-import com.instacart.formula.internal.TransitionDispatcher
-import com.instacart.formula.internal.UnitListener
 
 /**
  * Provides functionality within [evaluate][Formula.evaluate] function to [compose][child]
@@ -12,7 +9,6 @@ import com.instacart.formula.internal.UnitListener
  */
 abstract class FormulaContext<out Input, State> internal constructor(
     @PublishedApi internal val listeners: ScopedListeners,
-    internal val transitionDispatcher: TransitionDispatcher<Input, State>,
 ) {
 
     /**
@@ -20,86 +16,64 @@ abstract class FormulaContext<out Input, State> internal constructor(
      *
      * It uses [transition] type as key.
      */
-    fun <Event> onEvent(
+    abstract fun <Event> onEvent(
         transition: Transition<Input, State, Event>,
-    ): Listener<Event> {
-        return eventListener(
-            key = transition.type(),
-            transition = transition
-        )
-    }
+    ): Listener<Event>
 
     /**
      * Creates a [Listener] that takes a [Event] and performs a [Transition].
      *
      * @param key key with which the listener is to be associated. Same key cannot be used for multiple listeners.
      */
-    fun <Event> onEvent(
+    abstract fun <Event> onEvent(
         key: Any,
         transition: Transition<Input, State, Event>,
-    ): Listener<Event> {
-        return eventListener(
-            key = JoinedKey(key, transition.type()),
-            transition = transition
-        )
-    }
+    ): Listener<Event>
 
     /**
      * Creates a listener that takes an event and performs a [Transition].
      *
      * It uses [transition] type as key.
      */
-    fun callback(transition: Transition<Input, State, Unit>): () -> Unit {
-        val listener = onEvent(transition)
-        return UnitListener(listener)
-    }
+    abstract fun callback(transition: Transition<Input, State, Unit>): () -> Unit
 
     /**
      * Creates a listener that takes an event and performs a [Transition].
      *
      * @param key key with which the listener is to be associated. Same key cannot be used for multiple listeners.
      */
-    fun callback(
+    abstract fun callback(
         key: Any,
         transition: Transition<Input, State, Unit>,
-    ): () -> Unit {
-        val listener = onEvent(key, transition)
-        return UnitListener(listener)
-    }
+    ): () -> Unit
 
     /**
      * Creates a listener that takes a [Event] and performs a [Transition].
      *
      * It uses [transition] type as key.
      */
-    fun <Event> eventCallback(
+    abstract fun <Event> eventCallback(
         transition: Transition<Input, State, Event>,
-    ): Listener<Event> {
-        return onEvent(transition)
-    }
+    ): Listener<Event>
 
     /**
      * Creates a listener that takes a [Event] and performs a [Transition].
      *
      * @param key key with which the listener is to be associated. Same key cannot be used for multiple listeners.
      */
-    fun <Event> eventCallback(
+    abstract fun <Event> eventCallback(
         key: Any,
         transition: Transition<Input, State, Event>,
-    ): Listener<Event> {
-        return onEvent(key, transition)
-    }
+    ): Listener<Event>
 
     /**
      * A convenience method to run a formula that takes no input. Returns the latest output
      * of the [child] formula. Formula runtime ensures the [child] is running, manages
      * its internal state and will trigger `evaluate` if needed.
      */
-    fun <ChildOutput> child(
+    abstract fun <ChildOutput> child(
         child: IFormula<Unit, ChildOutput>
-    ): ChildOutput {
-        return child(child, Unit)
-    }
+    ): ChildOutput
 
     /**
      * Returns the latest output of the [child] formula. Formula runtime ensures the [child]
@@ -111,7 +85,7 @@ abstract class FormulaContext<out Input, State> internal constructor(
     ): ChildOutput
 
     /**
-     * Provides an [UpdateBuilder] that enables [Formula] to declare various events and effects.
+     * Provides an [StreamBuilder] that enables [Formula] to declare various events and effects.
      */
     abstract fun updates(init: StreamBuilder<Input, State>.() -> Unit): List<BoundStream<*>>
 
@@ -127,13 +101,8 @@ abstract class FormulaContext<out Input, State> internal constructor(
         return value
     }
 
-    internal fun <Event> eventListener(
+    internal abstract fun <Event> eventListener(
         key: Any,
         transition: Transition<Input, State, Event>
-    ): Listener<Event> {
-        val listener = listeners.initOrFindListener<Input, State, Event>(key)
-        listener.transitionDispatcher = transitionDispatcher
-        listener.transition = transition
-        return listener
-    }
+    ): Listener<Event>
 }
